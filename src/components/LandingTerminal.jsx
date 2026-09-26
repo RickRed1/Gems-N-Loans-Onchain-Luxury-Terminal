@@ -1,5 +1,6 @@
 ﻿import React, { useState } from 'react';
 import { connectWallet } from './web3Provider';
+import CourtyardCollateralModule from './CourtyardCollateralModule';
 
 export default function LandingTerminal() {
   const [account, setAccount] = useState(null);
@@ -24,7 +25,6 @@ export default function LandingTerminal() {
 
   const handleZkpVerify = () => {
     setZkpVerified(true);
-    // Simulate detecting an institutional-grade ERC-721 Financial Instrument license
     setUserTier('INSTITUTIONAL');
     setLogs(prev => [
       ...prev,
@@ -63,25 +63,30 @@ export default function LandingTerminal() {
       </header>
 
       {/* Navigation Tabs */}
-      <div className="flex gap-4 mb-6 border-b border-green-800 pb-2">
+      <div className="flex gap-4 mb-6 border-b border-green-800 pb-2 overflow-x-auto">
         <button 
           onClick={() => setActiveTab('terminal')}
-          className={\px-4 py-1 text-sm font-bold \\}
+          className={px-4 py-1 text-sm font-bold }
         >
           // 01. TERMINAL_UI
         </button>
         <button 
           onClick={() => setActiveTab('vaults')}
-          className={\px-4 py-1 text-sm font-bold \\}
+          className={px-4 py-1 text-sm font-bold }
         >
           // 02. ORACLE_VAULTS {userTier === 'NONE' && '[GATED]'}
+        </button>
+        <button 
+          onClick={() => setActiveTab('courtyard')}
+          className={px-4 py-1 text-sm font-bold }
+        >
+          // 03. OPENSEA_COURTYARD_COLLATERAL {userTier === 'NONE' && '[GATED]'}
         </button>
       </div>
 
       {/* Main Content View */}
       {activeTab === 'terminal' ? (
         <main className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Left Column: Thesis & Gating */}
           <div className="lg:col-span-1 space-y-6">
             <div className="border border-green-800 p-4 bg-green-950/20">
               <h2 className="text-sm font-bold border-b border-green-800 pb-2 mb-3 text-green-400">
@@ -102,14 +107,13 @@ export default function LandingTerminal() {
               <button 
                 onClick={handleZkpVerify}
                 disabled={zkpVerified}
-                className={\w-full py-2 text-xs font-bold transition-colors \\}
+                className={w-full py-2 text-xs font-bold transition-colors }
               >
                 {zkpVerified ? '[ LICENSE GATED & VERIFIED ]' : 'EXECUTE ZKP LICENSE PROOF'}
               </button>
             </div>
           </div>
 
-          {/* Right Column: Terminal Logs */}
           <div className="lg:col-span-2 space-y-6">
             <div className="border border-green-800 p-4 bg-green-950/10 flex flex-col h-[320px]">
               <h2 className="text-sm font-bold border-b border-green-800 pb-2 mb-3 text-green-400">
@@ -123,7 +127,7 @@ export default function LandingTerminal() {
             </div>
           </div>
         </main>
-      ) : (
+      ) : activeTab === 'vaults' ? (
         <main className="border border-green-800 p-6 bg-green-950/10">
           <h2 className="text-lg font-bold mb-4 text-green-400">&gt;&gt; ORACLE-BACKED LENDING VAULTS</h2>
           {userTier === 'NONE' ? (
@@ -151,6 +155,8 @@ export default function LandingTerminal() {
             </div>
           )}
         </main>
+      ) : (
+        <CourtyardCollateralModule userTier={userTier} />
       )}
     </div>
   );
